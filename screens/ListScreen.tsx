@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 
 type User = {
   id: number;
@@ -9,12 +9,35 @@ type User = {
 
 export default function ListScreen() {
   const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('https://fakejson-api.mock.beeceptor.com/users')
-      .then((res) => res.json())
-      .then(setUsers);
+    fetch('https://fake-json-api.mock.beeceptor.com/users')
+      .then((res) => {
+        if (!res.ok) throw new Error('Failed to fetch users');
+        return res.json();
+      })
+      .then(setUsers)
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
   }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.center}>
+        <Text style={{ color: 'red' }}>Error: {error}</Text>
+      </View>
+    );
+  }
 
   return (
     <FlatList
@@ -40,4 +63,5 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   text: { fontSize: 16 },
+  center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
 });
