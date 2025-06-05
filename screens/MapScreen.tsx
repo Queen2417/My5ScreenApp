@@ -1,5 +1,4 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Platform, PermissionsAndroid, Text } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
 export default function MapScreen() {
@@ -7,13 +6,19 @@ export default function MapScreen() {
     <View style={styles.container}>
       <MapView
         style={styles.map}
+        showsUserLocation={true}
         initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}>
-        <Marker coordinate={{ latitude: 37.78825, longitude: -122.4324 }} title="My Location" />
+          latitude: 6.5244,  // Example: Lagos
+          longitude: 3.3792,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
+        }}
+      >
+        <Marker
+          coordinate={{ latitude: 6.5244, longitude: 3.3792 }}
+          title="You are here"
+          description="Lagos, Nigeria"
+        />
       </MapView>
     </View>
   );
